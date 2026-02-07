@@ -1,0 +1,43 @@
+.story-article {
+  line-height: 1.7;
+  font-size: 18px;
+  color: #111827;
+}
+
+/* 高亮使用词（阅读模式 & incline 内部） */
+.story-word-highlight {
+  background: #fff59d; /* 柔和黄色高亮 */
+  padding: 0 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* incline 模式：每个意群下划线并支持 hover 放大（scale）*/
+.story-incline-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.story-chunk {
+  display: inline-block;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  text-decoration-color: rgba(59,130,246,0.6); /* 蓝色下划线 */
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+/* hover 放大（不影响布局太多） */
+.story-chunk:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* 阅读模式里高亮样式（可复用） */
+.story-read-mode {
+  white-space: pre-wrap;
+}
