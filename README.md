@@ -1,6 +1,6 @@
 # Meow-mory
 
-[icon](frontend/public/meowmory.png)
+![icon](frontend/public/meowmory.png)    
 Meow-mory is a full-stack prototype for vocabulary learning assisted by large language models.  
 The system combines a FastAPI backend, a modern frontend, and a model-driven memory strategy to support word import, review scheduling, and learning progress analysis.
 
@@ -66,7 +66,7 @@ Meow-mory/
 
 Meow-mory is implemented as a full stack system with a clear separation between user interface, backend services, model logic, and data storage.  
 The technology stack is chosen to balance development efficiency, extensibility, and research flexibility.
-[stack](docs/High-LevelSystemArchitecture)
+![stack](docs/High-LevelSystemArchitecture)
 ### Backend
 
 • Language: Python  
@@ -154,3 +154,4 @@ Planned or possible extensions:
 ## License
 
 This project is released under the MIT License.
+
