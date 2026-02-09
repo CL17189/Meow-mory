@@ -10,7 +10,7 @@ class LLMClient:
         self.model= model
         #从系统文件.env按模型名读取
         if model == "gemini-pro":
-            os.environ["GOOGLE_API_KEY"] = "AIzaSyD_aXyoQqyoD_-zxeJprBG2NRrnc0UfjvE"
+            os.environ["GOOGLE_API_KEY"] = ""
             import vertexai
 
             # 确保先初始化 Vertex AI
