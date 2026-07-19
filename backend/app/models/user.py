@@ -7,9 +7,14 @@ class User(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True)
 
     email: str = Field(unique=True, index=True)
+    password_hash: Optional[str] = Field(default=None)
+    google_sub: Optional[str] = Field(default=None, unique=True, index=True)
+    display_name: Optional[str] = Field(default=None)
+    deleted_at: Optional[datetime] = Field(default=None, index=True)
     preferred_language: str = Field(default="en", index=True)
 
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     stories: List["Story"] = Relationship(back_populates="user")
     review_logs: List["ReviewLog"] = Relationship(back_populates="user")
+    learning_days: List["LearningDay"] = Relationship(back_populates="user")

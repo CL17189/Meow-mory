@@ -14,7 +14,7 @@ export interface StoryListResponse {
 
 
 export interface GenerateStoryRequest {
-  lang: string;
+  language: string;
   words: string[];
   wordcount?: number;
   difficulty?: string;
@@ -24,6 +24,7 @@ export interface GenerateStoryRequest {
 
 export interface GenerateStoryResponse {
   story_id: number;
+  user_id?: string;
   language: string;
   content: string;
   word_count: number;
@@ -36,4 +37,5 @@ export interface GenerateStoryResponse {
 export interface StoryWordUsage {
   story_id: number;
   word: string;
+  language?: string;
 }

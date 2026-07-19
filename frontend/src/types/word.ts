@@ -1,9 +1,13 @@
 // types/word.ts
 
 export type WordImportRequest = {
+  language?: string;
   words: string[];
 };
 
 export type WordImportResponse = {
-  count: number;
+  language: string;
+  inserted: number;
+  skipped: number;
+  total: number;
 };

@@ -1,0 +1,37 @@
+.account-page { max-width: 980px; margin: 0 auto; color: var(--ink); }
+.account-toolbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+.account-toolbar .eyebrow { color: var(--peach-deep); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.account-toolbar h1 { margin: 8px 0 6px; color: var(--ink); font-family: Georgia, serif; font-size: clamp(30px, 4vw, 42px); font-weight: 500; letter-spacing: -.04em; }
+.account-toolbar p { margin: 0; color: var(--muted); font-size: 13px; }
+.account-layout { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr); gap: 20px; }
+.account-card { padding: 25px; background: rgba(255,253,249,.9); border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); }
+.account-summary { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 275px; text-align: center; }
+.account-avatar-large { display: grid; place-items: center; width: 76px; height: 76px; margin-bottom: 16px; color: #fff; background: linear-gradient(145deg, var(--lavender), #c0a9d7); border-radius: 26px; font-family: Georgia, serif; font-size: 34px; box-shadow: 0 12px 24px rgba(155,145,201,.22); }
+.account-summary h2 { margin: 0 0 5px; font-family: Georgia, serif; font-size: 24px; font-weight: 500; }
+.account-summary p { margin: 0; color: var(--muted); font-size: 12px; word-break: break-word; }
+.account-summary .account-badge { margin-top: 18px; padding: 7px 10px; color: #7b6256; background: #fff0e7; border-radius: 999px; font-size: 11px; font-weight: 750; }
+.account-card h2 { margin: 0 0 6px; font-family: Georgia, serif; font-size: 23px; font-weight: 500; }
+.account-card-intro { margin: 0 0 20px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.account-form { display: flex; flex-direction: column; gap: 16px; }
+.account-field { display: flex; flex-direction: column; gap: 7px; color: var(--ink); font-size: 12px; font-weight: 750; }
+.account-field input { min-height: 44px; padding: 10px 12px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 12px; outline: 0; }
+.account-field input:focus { border-color: var(--peach); box-shadow: 0 0 0 4px rgba(243,162,143,.14); }
+.account-field input[readonly] { color: var(--muted); background: #faf7f4; }
+.account-actions { display: flex; align-items: center; gap: 12px; margin-top: 3px; }
+.account-primary { min-height: 43px; padding: 9px 16px; color: #fff; background: var(--ink); border: 0; border-radius: 12px; font-size: 12px; font-weight: 800; }
+.account-primary:hover { background: #5b5361; }
+.account-primary:disabled { cursor: wait; opacity: .65; }
+.account-message { margin: 0; color: #587e6d; font-size: 12px; }
+.account-error { margin: 0; padding: 10px 12px; color: #a3544d; background: #fff0ee; border-radius: 10px; font-size: 12px; }
+.account-settings-stack { display: grid; gap: 20px; }
+.account-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.account-setting-row h3 { margin: 0 0 5px; font-size: 14px; }
+.account-setting-row p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.account-danger { border-color: #f1d5cf; }
+.account-danger h2 { color: #9b574f; }
+.account-danger-copy { margin-bottom: 16px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.account-danger-button { min-height: 40px; padding: 8px 13px; color: #a3544d; background: #fff5f1; border: 1px solid #f0cfc8; border-radius: 11px; font-size: 12px; font-weight: 750; }
+.account-danger-button:hover { background: #ffeae5; }
+.account-danger-button:disabled { cursor: wait; opacity: .65; }
+@media (max-width: 700px) { .account-toolbar { align-items: flex-start; flex-direction: column; } .account-layout { grid-template-columns: 1fr; } .account-summary { min-height: 215px; } }
+@media (max-width: 500px) { .account-card { padding: 19px; border-radius: 19px; } .account-setting-row { align-items: flex-start; flex-direction: column; } }

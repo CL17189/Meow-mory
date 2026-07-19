@@ -2,12 +2,13 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+import os
 
 from alembic import context
 
 #added
 from sqlmodel import SQLModel
-from app.models import user, word, review_log,story_word,story # 确保所有表被 import
+from app.models import user, word, review_log, story_word, story, learning_day # 确保所有表被 import
 
 target_metadata = SQLModel.metadata
 
@@ -16,6 +17,10 @@ target_metadata = SQLModel.metadata
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+database_url = os.getenv("MEOWMORY_DATABASE_URL") or os.getenv("DATABASE_URL")
+if database_url:
+    config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

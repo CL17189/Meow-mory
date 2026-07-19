@@ -1,0 +1,25 @@
+.cat-loader { display: flex; align-items: center; gap: 20px; width: min(100%, 520px); padding: 18px 20px; background: #fff7ee; border: 1px solid #f8dfd0; border-radius: 22px; box-shadow: 0 12px 30px rgba(171, 112, 85, .1); }
+.cat-loader-scene { position: relative; flex: 0 0 150px; height: 92px; overflow: hidden; }
+.cat-track { position: absolute; right: 0; bottom: 17px; left: 0; height: 2px; background: repeating-linear-gradient(90deg, #efc2b1 0 14px, transparent 14px 23px); opacity: .8; }
+.dancing-cat { position: absolute; bottom: 18px; left: 13px; z-index: 2; font-size: 46px; line-height: 1; transform-origin: 50% 90%; animation: cat-run 2.1s ease-in-out infinite; }
+.cat-shadow { position: absolute; bottom: 12px; left: 22px; width: 44px; height: 8px; background: rgba(125, 87, 70, .16); border-radius: 50%; animation: shadow-bounce 1.05s ease-in-out infinite; }
+.cat-spark { position: absolute; z-index: 3; color: #ee9c7f; font-size: 15px; animation: sparkle 1.6s ease-in-out infinite; }
+.spark-one { top: 13px; left: 28px; }
+.spark-two { top: 28px; right: 26px; animation-delay: .6s; color: #a69aca; }
+.cat-loader-copy { display: flex; flex-direction: column; gap: 5px; }
+.cat-loader-copy strong { color: #5d4a4d; font-size: 15px; }
+.cat-loader-copy span { color: #a1847d; font-size: 13px; }
+.cat-dots { display: flex; gap: 4px; margin-top: 5px; }
+.cat-dots i { width: 5px; height: 5px; background: #e8977f; border-radius: 50%; animation: dot-pulse 1.2s ease-in-out infinite; }
+.cat-dots i:nth-child(2) { animation-delay: .16s; }
+.cat-dots i:nth-child(3) { animation-delay: .32s; }
+
+@keyframes cat-run { 0%, 100% { transform: translateX(0) rotate(-5deg); } 25% { transform: translateX(30px) rotate(6deg) translateY(-5px); } 50% { transform: translateX(64px) rotate(-5deg); } 75% { transform: translateX(94px) rotate(7deg) translateY(-5px); } }
+@keyframes shadow-bounce { 0%, 100% { transform: scaleX(1); opacity: .55; } 50% { transform: translateX(62px) scaleX(.7); opacity: .2; } }
+@keyframes sparkle { 0%, 100% { opacity: .25; transform: scale(.75) rotate(0); } 50% { opacity: 1; transform: scale(1.2) rotate(20deg); } }
+@keyframes dot-pulse { 0%, 80%, 100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-4px); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dancing-cat { animation: none; }
+  .cat-shadow, .cat-spark, .cat-dots i { animation: none; }
+}

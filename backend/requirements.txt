@@ -24,3 +24,5 @@ celery
 redis
 pytest
 httpx
+python-multipart
+google-auth

@@ -1,171 +1,49 @@
-/* WordsPage.css */
-.wp-page {
-  max-width: 1100px;
-  margin: 24px auto;
-  padding: 0 16px;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color: #111827;
-}
-
-.wp-top {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-/* Stories section (left) */
-.wp-stories-section {
-  flex: 1 1 0;
-  background: #fff;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid #eef0f2;
-  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
-}
-
-.wp-section-header {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.wp-section-header h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.wp-sub {
-  color: #6b7280;
-  font-size: 13px;
-}
-
-.wp-stories-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.wp-story-card {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  background: #fbfdfe;
-  border: 1px solid #f1f5f9;
-}
-
-.wp-thumb-shape {
-  width: 90px;
-  height: 60px;
-  background: linear-gradient(135deg, #f8fafc, #eef2f7);
-  border-radius: 6px;
-}
-
-.wp-story-meta {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.wp-story-excerpt {
-  color: #374151;
-  font-size: 13px;
-  line-height: 1.3;
-  max-height: 3.9em;
-  overflow: hidden;
-}
-
-.wp-story-time {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-/* Right CTA */
-.wp-right-cta {
-  width: 260px;
-  flex: 0 0 260px;
-}
-
-.wp-cta-card {
-  background: #fff;
-  padding: 18px;
-  border-radius: 10px;
-  border: 1px solid #eef0f2;
-  box-shadow: 0 8px 20px rgba(16,24,40,0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: stretch;
-}
-
-.wp-primary {
-  background: #111827;
-  color: #fff;
-  border: none;
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Vocabulary */
-.wp-bottom {
-  margin-top: 18px;
-  display: flex;
-  gap: 20px;
-}
-
-.wp-vocab-section {
-  flex: 1;
-  background: #fff;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid #eef0f2;
-}
-
-.wp-vocab-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.wp-word-chip,
-.wp-system-chip {
-  padding: 8px 10px;
-  background: #fbfdfe;
-  border: 1px solid #f1f5f9;
-  border-radius: 8px;
-  font-size: 13px;
-}
-
-.wp-actions {
-  margin-top: 12px;
-}
-
-.wp-button {
-  background: none;
-  border: 1px solid #e5e7eb;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Loading / empty states */
-.wp-loading,
-.wp-empty {
-  padding: 16px;
-  color: #6b7280;
-}
-
-
-.wp-story-card {
-  cursor: pointer;
-}
-
-.wp-story-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
+.wp-page { max-width: 1180px; margin: 0 auto; color: var(--ink); }
+.home-welcome { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; margin-bottom: 25px; }
+.home-welcome-actions { display: flex; align-items: flex-end; gap: 12px; }
+.home-streak-card { width: 174px; padding: 12px 13px; background: rgba(255,253,249,.9); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 7px 18px rgba(130,90,72,.05); }
+.home-streak-heading { display: flex; align-items: baseline; gap: 5px; color: var(--muted); font-size: 11px; }
+.home-streak-heading span:first-child { color: var(--peach-deep); font-size: 15px; }
+.home-streak-heading strong { color: var(--ink); font-size: 22px; }
+.home-streak-track { height: 5px; margin: 9px 0 7px; overflow: hidden; background: #f4eee9; border-radius: 99px; }
+.home-streak-track span { display: block; height: 100%; min-width: 0; background: linear-gradient(90deg, var(--peach), var(--lavender)); border-radius: inherit; transition: width .35s ease; }
+.home-streak-card p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.35; }
+.home-welcome .eyebrow { color: var(--peach-deep); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.home-welcome h1 { margin: 8px 0 6px; color: var(--ink); font-family: Georgia, serif; font-size: clamp(30px, 4vw, 42px); font-weight: 500; letter-spacing: -.04em; }
+.home-welcome p { margin: 0; color: var(--muted); font-size: 13px; }
+.wp-top { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(260px, .65fr); gap: 22px; align-items: stretch; }
+.wp-stories-section, .wp-vocab-section { padding: 25px; background: rgba(255,253,249,.88); border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); }
+.wp-section-header { display: flex; align-items: baseline; gap: 9px; margin-bottom: 18px; }
+.wp-section-header h2 { margin: 0; font-size: 20px; }
+.wp-sub { color: var(--muted); font-size: 12px; }
+.wp-stories-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+.wp-story-card { display: flex; gap: 12px; min-height: 112px; padding: 12px; background: #fffaf5; border: 1px solid #f4e9df; border-radius: 16px; cursor: pointer; transition: .2s ease; }
+.wp-story-card:hover { transform: translateY(-3px); border-color: #f1c4b5; box-shadow: 0 9px 20px rgba(130,90,72,.08); }
+.wp-thumb-shape { width: 48px; height: 48px; flex: 0 0 48px; background: #ffe1d6; border-radius: 15px; }
+.wp-thumb-shape::after { display: grid; place-items: center; height: 100%; content: "🐾"; font-size: 20px; }
+.wp-story-meta { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+.wp-story-lang { color: var(--peach-deep); font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+.wp-story-excerpt { display: -webkit-box; overflow: hidden; color: #625866; font-size: 13px; line-height: 1.4; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.wp-story-time { margin-top: auto; color: #b0a1a0; font-size: 10px; }
+.wp-right-cta { display: flex; }
+.wp-cta-card { display: flex; width: 100%; flex-direction: column; align-items: flex-start; justify-content: flex-end; min-height: 255px; padding: 25px; overflow: hidden; background: #efeaff; border-radius: 24px; position: relative; }
+.wp-cta-card::before { position: absolute; top: 20px; right: 23px; content: "🐱"; font-size: 66px; transform: rotate(12deg); }
+.wp-cta-card h3 { position: relative; max-width: 180px; margin: 0 0 8px; color: #4a4355; font-family: Georgia, serif; font-size: 27px; font-weight: 500; }
+.wp-cta-card p { position: relative; max-width: 210px; margin-bottom: 20px; color: #7a6f86; font-size: 13px; line-height: 1.5; }
+.wp-primary { position: relative; padding: 11px 16px; color: #fff; background: var(--ink); border: 0; border-radius: 12px; font-size: 13px; font-weight: 750; }
+.wp-bottom { margin-top: 22px; }
+.wp-vocab-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.wp-vocab-card { padding: 15px; background: #fffaf5; border: 1px solid #f4e9df; border-radius: 16px; }
+.wp-vocab-title { margin-bottom: 6px; font-weight: 750; }
+.wp-vocab-meta, .wp-vocab-time { color: var(--muted); font-size: 11px; }
+.wp-vocab-preview { margin: 12px 0; overflow: hidden; color: #8b7880; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.wp-actions { margin-top: 16px; }
+.wp-button { padding: 8px 13px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 10px; font-size: 12px; font-weight: 700; }
+.wp-button:hover { border-color: var(--peach); background: #fff8f2; }
+.wp-loading, .wp-empty { padding: 20px 4px; color: var(--muted); font-size: 13px; }
+.wp-system-words p { color: var(--muted); font-size: 13px; }
+.wp-system-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.wp-system-chip { padding: 8px 10px; color: #84584f; background: #ffe8df; border-radius: 999px; font-size: 12px; }
+@media (max-width: 820px) { .wp-top { grid-template-columns: 1fr; } .wp-right-cta { order: -1; } .wp-cta-card { min-height: 200px; } }
+@media (max-width: 560px) { .wp-stories-grid { grid-template-columns: 1fr; } .wp-stories-section, .wp-vocab-section { padding: 18px; border-radius: 19px; } }
+@media (max-width: 600px) { .home-welcome { align-items: flex-start; flex-direction: column; } .home-welcome-actions { align-items: stretch; width: 100%; justify-content: space-between; } }

@@ -1,0 +1,12 @@
+.story-page { max-width: 880px; margin: 0 auto; }
+.story-topline { display: flex; align-items: center; justify-content: space-between; margin-bottom: 34px; color: var(--muted); font-size: 12px; }
+.back-link { padding: 0; color: var(--ink); background: transparent; border: 0; font-size: 13px; font-weight: 750; }
+.story-header { margin-bottom: 24px; }
+.story-header .eyebrow { color: var(--peach-deep); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.story-header h1 { margin: 9px 0 7px; color: var(--ink); font-family: Georgia, serif; font-size: clamp(36px, 5vw, 52px); font-weight: 500; letter-spacing: -.04em; }
+.story-header p { margin: 0; color: var(--muted); font-size: 13px; }
+.story-card { padding: clamp(20px, 4vw, 38px); background: rgba(255,253,249,.9); border: 1px solid var(--line); border-radius: 26px; box-shadow: var(--shadow); }
+.story-state { display: grid; place-items: center; min-height: 280px; color: var(--muted); text-align: center; }
+.story-state span { font-size: 38px; }
+.story-state.error { color: #a3544d; }
+@media (max-width: 520px) { .story-topline { margin-bottom: 25px; } .story-card { border-radius: 19px; } }

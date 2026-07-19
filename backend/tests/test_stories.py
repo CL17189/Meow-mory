@@ -1,4 +1,4 @@
-def test_generate_story(client):
+def test_generate_story(client, auth_headers):
     payload = {
         "language": "en",
         "words": ["water", "book"],
@@ -8,7 +8,7 @@ def test_generate_story(client):
         "startwith": "Once upon a time",
     }
 
-    response = client.post("/api/v1/stories/generate", json=payload)
+    response = client.post("/api/v1/stories/generate", json=payload, headers=auth_headers)
 
     assert response.status_code == 200
 
@@ -21,7 +21,7 @@ def test_generate_story(client):
     assert "created_at" in data
 
 
-def test_list_stories_filter_by_language(client):
+def test_list_stories_filter_by_language(client, auth_headers):
     payload = {
         "language": "en",
         "words": ["water", "book"],
@@ -33,9 +33,10 @@ def test_list_stories_filter_by_language(client):
     client.post(
         "/api/v1/stories/generate",
         json=payload,
+        headers=auth_headers,
     )
 
-    response = client.get("/api/v1/stories?language=en")
+    response = client.get("/api/v1/stories?language=en", headers=auth_headers)
 
     data = response.json()
     print(data)

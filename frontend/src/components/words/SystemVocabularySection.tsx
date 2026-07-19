@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import VocabCard from "./VocabCard";
 import type { VocabCard as Card } from "../../types/vocab";
+import { listVocabs } from "../../api/vocab";
 
 export default function SystemVocabularySection({
   language,
@@ -10,23 +11,9 @@ export default function SystemVocabularySection({
   const [systemVocabs, setSystemVocabs] = useState<Card[]>([]);
 
   useEffect(() => {
-    // mock：未来替换成 API
-    setSystemVocabs([
-      {
-        id: "sys-a1",
-        title: `${language.toUpperCase()} A1 Core`,
-        difficulty: "easy",
-        total: 800,
-        progress: 0,
-      },
-      {
-        id: "sys-b1",
-        title: `${language.toUpperCase()} B1 Core`,
-        difficulty: "medium",
-        total: 1500,
-        progress: 0,
-      },
-    ]);
+    listVocabs({ language, limit: 20, offset: 0 })
+      .then((response) => setSystemVocabs(response.items))
+      .catch(() => setSystemVocabs([]));
   }, [language]);
 
   return (

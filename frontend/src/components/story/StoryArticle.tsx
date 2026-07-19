@@ -1,90 +1,100 @@
-import React, { useMemo, useState } from "react";
-import Highlighter from "react-highlight-words";
+import { useEffect, useMemo, useState } from "react";
+import { lookupWord, type WordDefinition } from "../../api/dictionary";
 import "./StoryArticle.css";
 
 type Props = {
   content: string;
-  highlightWords: string[]; // 需要高亮的词
+  highlightWords: string[];
+  language?: string;
   onWordClick?: (word: string) => void;
 };
 
-export default function StoryArticle({ content, highlightWords, onWordClick }: Props) {
-  const [inclineMode, setInclineMode] = useState(false);
+type ReaderMode = "inline" | "hover";
+type ActiveWord = { word: string; id: string } | null;
 
-  // 简单的“意群”分割器：按逗号 / 分号 / 长短停顿词 / 句号 / and / but 分割
-  const chunks = useMemo(() => {
-    // 这是启发式：先按句子标点切，再在每句内按连词切分
-    const sentenceSplit = content.split(/([.?!])/).reduce<string[]>((acc, cur, idx, arr) => {
-      if (cur === "." || cur === "?" || cur === "!") {
-        acc[acc.length - 1] = (acc[acc.length - 1] || "") + cur;
-      } else {
-        acc.push(cur.trim());
-      }
-      return acc.filter(Boolean);
-    }, []);
+function splitChunks(content: string) {
+  return content
+    .split(/(?<=[.!?])\s+|(?<=[,;])\s+|\s+(?=(?:and|but|because|so|then)\s)/i)
+    .map((chunk) => chunk.trim())
+    .filter(Boolean);
+}
 
-    const smallChunks: string[] = [];
-    for (const s of sentenceSplit) {
-      // 在句子里进一步切
-      const parts = s.split(/,\s+|;\s+|\sand\s|\sbut\s/i).map((p) => p.trim()).filter(Boolean);
-      for (const p of parts) smallChunks.push(p);
-    }
+function isTargetWord(token: string, targets: string[]) {
+  const clean = token.toLowerCase().replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+  return targets.some((target) => target.toLowerCase() === clean || clean.startsWith(`${target.toLowerCase()}-`));
+}
 
-    // 过滤空并返回
-    return smallChunks;
-  }, [content]);
+function WordTooltip({ word, language, onOpen }: { word: string; language: string; onOpen?: (word: string) => void }) {
+  const [definition, setDefinition] = useState<WordDefinition | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    setDefinition(null);
+    lookupWord(word, language).then((result) => { if (active) setDefinition(result); });
+    return () => { active = false; };
+  }, [word, language]);
 
   return (
-    <div className="story-article">
-      <div style={{ marginBottom: 12 }}>
-        <label style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <input type="checkbox" checked={inclineMode} onChange={() => setInclineMode((s) => !s)} />
-          <span>Incline 模式（语义意群显示）</span>
-        </label>
+    <span className="word-tooltip" role="tooltip" onClick={(event) => { event.stopPropagation(); onOpen?.(word); }}>
+      <strong>{word}</strong>
+      {definition ? <>
+        <span className="tooltip-meta">{definition.partOfSpeech ?? "word"}{definition.phonetic ? ` · ${definition.phonetic}` : ""}</span>
+        <span>{definition.definition}</span>
+        {definition.example && <em>“{definition.example}”</em>}
+      </> : <span className="tooltip-loading">Looking up the meaning…</span>}
+    </span>
+  );
+}
+
+function RichText({ text, targets, language, onOpenWord, onHover }: { text: string; targets: string[]; language: string; onOpenWord?: (word: string) => void; onHover?: (word: string) => void }) {
+  return <>
+    {text.split(/(\s+)/).map((part, index) => {
+      if (!part.trim() || !isTargetWord(part, targets)) return <span key={`${part}-${index}`}>{part}</span>;
+      const clean = part.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+      return <span key={`${part}-${index}`} className="target-word" tabIndex={0} onMouseEnter={() => onHover?.(clean)} onFocus={() => onHover?.(clean)} onClick={() => onOpenWord?.(clean)}>{part}</span>;
+    })}
+  </>;
+}
+
+export default function StoryArticle({ content, highlightWords, language = "en", onWordClick }: Props) {
+  const [mode, setMode] = useState<ReaderMode>("inline");
+  const [activeWord, setActiveWord] = useState<ActiveWord>(null);
+  const chunks = useMemo(() => splitChunks(content), [content]);
+
+  function activate(word: string, id: string) {
+    setActiveWord({ word, id });
+  }
+
+  return (
+    <section className="story-reader" aria-label="Story reader">
+      <div className="reader-toolbar">
+        <div>
+          <span className="reader-label">Reading view</span>
+          <p>Hover a highlighted word to see a quick meaning. Click it for a larger card.</p>
+        </div>
+        <div className="mode-switch" role="group" aria-label="Reading mode">
+          <button type="button" className={mode === "inline" ? "active" : ""} onClick={() => setMode("inline")}>Inline</button>
+          <button type="button" className={mode === "hover" ? "active" : ""} onClick={() => setMode("hover")}>Hover</button>
+        </div>
       </div>
 
-      {!inclineMode ? (
-        <div className="story-read-mode">
-          {/* 使用 react-highlight-words 做词高亮 */}
-          <Highlighter
-            highlightClassName="story-word-highlight"
-            searchWords={highlightWords}
-            autoEscape={true}
-            textToHighlight={content}
-            // onWordClick 需要额外处理：react-highlight-words 没有直接提供点击单词回调
-            // 所以我们后面用 CSS + 捕获点击事件（delegation）
-          />
+      {mode === "inline" ? (
+        <div className="story-inline" onMouseLeave={() => setActiveWord(null)}>
+          {chunks.map((chunk, index) => {
+            const id = `chunk-${index}`;
+            return <p className={activeWord?.id === id ? "story-chunk active" : "story-chunk"} key={id}>
+              <RichText text={chunk} targets={highlightWords} language={language} onOpenWord={onWordClick} onHover={(word) => activate(word, id)} />
+              {activeWord?.id === id && <WordTooltip word={activeWord.word} language={language} onOpen={onWordClick} />}
+            </p>;
+          })}
         </div>
       ) : (
-        <div className="story-incline-mode">
-          {chunks.map((chunk, idx) => (
-            <span key={idx} className="story-chunk" title="hover to zoom">
-              {/* 在 chunk 内高亮 target words：简单方式是再次用 Highlighter */}
-              <Highlighter
-                highlightClassName="story-word-highlight"
-                searchWords={highlightWords}
-                autoEscape={true}
-                textToHighlight={chunk}
-                textToHighlightProps={{
-                  // 当用户点击高亮的词，会触发 event；捕获并回调 onWordClick
-                  onClick: (e: any) => {
-                    const target = e.target as HTMLElement;
-                    // react-highlight-words 会把高亮词包到 <mark>，class 为 highlightClassName
-                    const mark = target.closest?.("mark") ?? (target.tagName === "MARK" ? target : null);
-                    const word = mark ? mark.textContent?.trim() : undefined;
-                    if (word && onWordClick) onWordClick(word);
-                    e.stopPropagation();
-                  },
-                }}
-                textToHighlightRenderer={(parts: string[]) => {
-                  // 默认使用库渲染即可
-                  return parts;
-                }}
-              />
-            </span>
-          ))}
-        </div>
+        <p className="story-hover" onMouseLeave={() => setActiveWord(null)}>
+          <RichText text={content} targets={highlightWords} language={language} onOpenWord={onWordClick} onHover={(word) => activate(word, "hover-reader")} />
+          {activeWord?.id === "hover-reader" && <WordTooltip word={activeWord.word} language={language} onOpen={onWordClick} />}
+        </p>
       )}
-    </div>
+      <div className="reader-hint"><span aria-hidden="true">✦</span> Highlighted words are from your vocabulary</div>
+    </section>
   );
 }

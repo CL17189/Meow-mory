@@ -14,16 +14,16 @@ export default function VocabCard({ card }: { card: Card }) {
 
 
       <div className="vocab-meta">
-        <h4>{card.title}</h4>
+        <h4>{card.name}</h4>
         <div className="vocab-info">
-          <span>Difficulty: {card.difficulty}</span>
-          <span>Total: {card.total}</span>
+          <span>{card.language.toUpperCase()}</span>
+          <span>Total: {card.word_count}</span>
         </div>
 
         <div className="vocab-progress">
           <div
             className="vocab-progress-bar"
-            style={{ width: `${card.progress * 100}%` }}
+            style={{ width: "0%" }}
           />
         </div>
       </div>

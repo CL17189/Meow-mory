@@ -1,40 +1,32 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { lookupWord, type WordDefinition } from "../../api/dictionary";
+import "./WordInfoModal.css";
 
-export default function WordInfoModal({ word, onClose }: { word: string | null; onClose: () => void }) {
-  const [definition, setDefinition] = useState<string | null>(null);
+export default function WordInfoModal({ word, language = "en", onClose }: { word: string | null; language?: string; onClose: () => void }) {
+  const [definition, setDefinition] = useState<WordDefinition | null>(null);
 
   useEffect(() => {
     if (!word) return;
-    // mock 词典查询：生产请接入实际 API（例如 dictionaryapi.dev 或你自己的后端）
-    // 这里模拟异步请求
+    let active = true;
     setDefinition(null);
-    const t = setTimeout(() => {
-      setDefinition(`Definition mock for "${word}". (这里替换为真实词典 API 返回内容)`);
-    }, 400);
-    return () => clearTimeout(t);
-  }, [word]);
+    lookupWord(word, language).then((result) => { if (active) setDefinition(result); });
+    return () => { active = false; };
+  }, [word, language]);
 
   if (!word) return null;
 
   return (
-    <div style={{
-      position: "fixed",
-      inset: 0,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "rgba(0,0,0,0.4)",
-      zIndex: 9999
-    }}>
-      <div style={{ background: "#fff", padding: 20, borderRadius: 8, width: 420 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-          <h3 style={{ margin: 0 }}>{word}</h3>
-          <button onClick={onClose}>Close</button>
-        </div>
-
-        <div style={{ marginTop: 12 }}>
-          {definition ? <p>{definition}</p> : <p>Loading definition…</p>}
-        </div>
+    <div className="word-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <div className="word-modal" role="dialog" aria-modal="true" aria-labelledby="word-modal-title">
+        <button className="modal-close" type="button" onClick={onClose} aria-label="Close word definition">×</button>
+        <span className="modal-kicker">Vocabulary note</span>
+        <h2 id="word-modal-title">{word}</h2>
+        {definition ? <>
+          <div className="modal-definition-meta">{definition.partOfSpeech ?? "word"}{definition.phonetic ? ` · ${definition.phonetic}` : ""}</div>
+          <p className="modal-definition">{definition.definition}</p>
+          {definition.example && <p className="modal-example">“{definition.example}”</p>}
+        </> : <p className="modal-loading">Looking up the meaning…</p>}
+        <button className="modal-done" type="button" onClick={onClose}>Back to reading</button>
       </div>
     </div>
   );

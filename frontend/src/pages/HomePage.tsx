@@ -1,5 +1,5 @@
 // src/pages/WordsPage.tsx
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { StoryListResponse, StoryListItem } from "../types/stories";
@@ -10,6 +10,11 @@ import { listVocabs } from "../api/vocab";
 
 
 import "./HomePage.css";
+import LanguageSelect from "../components/LanguageSelect";
+import type { LanguageCode } from "../constants/languages";
+import { useAuth } from "../auth/AuthContext";
+import { updatePreferredLanguage } from "../api/auth";
+import { getStreak, STREAK_UPDATED_EVENT, type StreakSummary } from "../api/stats";
 
 
 
@@ -41,6 +46,12 @@ const SYSTEM_WORDS_BY_DIFFICULTY: Record<string, string[]> = {
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [language, setLanguage] = useState(user?.preferred_language ?? "en");
+
+  useEffect(() => {
+    if (user?.preferred_language) setLanguage(user.preferred_language);
+  }, [user?.preferred_language]);
 
   // Stories state
   const [stories, setStories] = useState<StoryCard[]>([]);
@@ -53,13 +64,24 @@ export default function HomePage() {
   const [vocabsLimit, setVocabsLimit] = useState<number>(PAGE_STEP);
   const [vocabsTotal, setVocabsTotal] = useState(0);
   const [loadingVocabs, setLoadingVocabs] = useState(false);
+  const [streak, setStreak] = useState<StreakSummary | null>(null);
+
+  const refreshStreak = useCallback(() => {
+    void getStreak().then(setStreak).catch(() => setStreak(null));
+  }, []);
+
+  useEffect(() => {
+    refreshStreak();
+    window.addEventListener(STREAK_UPDATED_EVENT, refreshStreak);
+    return () => window.removeEventListener(STREAK_UPDATED_EVENT, refreshStreak);
+  }, [refreshStreak]);
 
 
   // listStories 接受 { limit, offset }
   async function fetchStories(limit = storiesLimit) {
     setLoadingStories(true);
     try {
-      const res: StoryListResponse = await listStories({ language:"en", limit, offset: 0 });
+      const res: StoryListResponse = await listStories({ language, limit, offset: 0 });
       setStories(res.items);
       setStoriesTotal(res.total);
     } catch (e) {
@@ -75,7 +97,7 @@ export default function HomePage() {
 
   try {
     const res = await listVocabs({
-      language: "en",
+      language,
       limit,
       offset: 0,
     });
@@ -99,11 +121,16 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchStories(storiesLimit);
-  }, [storiesLimit]);
+  }, [storiesLimit, language]);
 
   useEffect(() => {
   fetchVocabs(vocabsLimit);
-  }, [vocabsLimit]);
+  }, [vocabsLimit, language]);
+
+  function handleLanguageChange(nextLanguage: LanguageCode) {
+    setLanguage(nextLanguage);
+    void updatePreferredLanguage(nextLanguage);
+  }
 
 
   function handleLoadMoreStories() {
@@ -175,6 +202,17 @@ export default function HomePage() {
 
   return (
     <div className="wp-page">
+      <header className="home-welcome">
+        <div><span className="eyebrow">Your learning nook</span><h1>Good to see you, {user?.display_name || "learner"}.</h1><p>Keep your practice small, warm, and consistent.</p></div>
+        <div className="home-welcome-actions">
+          <div className="home-streak-card" aria-live="polite">
+            <div className="home-streak-heading"><span aria-hidden="true">✦</span><strong>{streak?.current_streak ?? 0}</strong><span>day streak</span></div>
+            <div className="home-streak-track"><span style={{ width: `${((streak?.goal_progress ?? 0) / (streak?.goal_days || 5)) * 100}%` }} /></div>
+            <p>{streak?.today_completed ? "Today’s learning is complete." : "Learn today to keep it going."}</p>
+          </div>
+          <LanguageSelect value={language} onChange={handleLanguageChange} />
+        </div>
+      </header>
       <div className="wp-top">
         <section className="wp-stories-section">
           <header className="wp-section-header">

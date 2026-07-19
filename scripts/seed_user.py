@@ -14,7 +14,8 @@ def main():
         if not user:
             user = User(
                 email=email,
-                hashed_password="dev_only"
+                password_hash="dev_only",
+                preferred_language="en",
             )
             session.add(user)
             session.commit()

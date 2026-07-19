@@ -1,0 +1,10 @@
+.word-modal-backdrop { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(64,59,69,.28); backdrop-filter: blur(4px); }
+.word-modal { position: relative; width: min(100%, 430px); padding: 30px; background: #fffdf9; border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 24px 70px rgba(54,43,53,.22); }
+.modal-close { position: absolute; top: 14px; right: 15px; width: 31px; height: 31px; color: var(--muted); background: #fff4ec; border: 0; border-radius: 50%; font-size: 21px; line-height: 1; }
+.modal-kicker { color: var(--peach-deep); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.word-modal h2 { margin: 9px 0 4px; color: var(--ink); font-family: Georgia, serif; font-size: 34px; font-weight: 500; }
+.modal-definition-meta { color: var(--lavender); font-size: 12px; font-weight: 700; }
+.modal-definition { margin: 22px 0 10px; color: #514954; font-size: 17px; line-height: 1.65; }
+.modal-example { padding-left: 12px; color: var(--muted); border-left: 3px solid #ffd2c4; font-size: 13px; line-height: 1.6; }
+.modal-loading { margin: 22px 0; color: var(--muted); }
+.modal-done { width: 100%; min-height: 43px; margin-top: 20px; color: #fff; background: var(--ink); border: 0; border-radius: 13px; font-size: 13px; font-weight: 750; }

@@ -7,7 +7,8 @@ class Word(SQLModel, table=True):
 
     word_text: str = Field(index=True)
     language: str = Field(index=True)
+    owner_user_id: Optional[int] = Field(default=None, foreign_key="user.user_id", index=True)
 
-    created_at: Optional[str] = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     review_logs: List["ReviewLog"] = Relationship(back_populates="word")

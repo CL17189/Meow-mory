@@ -1,174 +1,64 @@
-import { Outlet, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { Link, Outlet, NavLink } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import "./MainLayout.css";
+import { useAuth } from "../auth/AuthContext";
+import { getStreak, STREAK_UPDATED_EVENT, type StreakSummary } from "../api/stats";
 
 export default function MainLayout() {
   const [open, setOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const [streak, setStreak] = useState<StreakSummary | null>(null);
+
+  const refreshStreak = useCallback(() => {
+    void getStreak().then(setStreak).catch(() => setStreak(null));
+  }, []);
+
+  useEffect(() => {
+    refreshStreak();
+    window.addEventListener(STREAK_UPDATED_EVENT, refreshStreak);
+    return () => window.removeEventListener(STREAK_UPDATED_EVENT, refreshStreak);
+  }, [refreshStreak]);
 
   return (
-    <>
-      <header style={styles.header}>
-        {/* 左侧 Logo */}
-        <div style={styles.left}>
-          <a href="/" style={styles.logo}>
-            <img src="/meowmory.png" alt="Logo" style={{ height: "40px" }} />
-          </a>
-        </div>
+    <div className="app-shell">
+      <header className="app-header">
+        <a href="/" className="brand" aria-label="Meowmory home">
+          <span className="brand-mark" aria-hidden="true">🐈</span>
+          <span className="brand-copy">
+            <strong>meowmory</strong>
+            <small>learn in little stories</small>
+          </span>
+        </a>
 
-        {/* 中间导航 */}
-        <nav style={styles.nav}>
-          <NavLink
-            to="/"
-            style={({ isActive }: { isActive: boolean }) =>
-              isActive ? styles.navItemActive : styles.navItem
-            }
-          >
-            HOME
-          </NavLink>
-          <NavLink
-            to="/words"
-            style={({ isActive }: { isActive: boolean }) =>
-              isActive ? styles.navItemActive : styles.navItem
-            }
-          >
-            VOCABULARY
-          </NavLink>
-          <NavLink
-            to="/stories"
-            style={({ isActive }: { isActive: boolean }) =>
-              isActive ? styles.navItemActive : styles.navItem
-            }
-          ></NavLink>
+        <nav className="main-nav" aria-label="Main navigation">
+          <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Home</NavLink>
+          <NavLink to="/words" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Vocabulary</NavLink>
+          <NavLink to="/stories/generate" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Create story</NavLink>
         </nav>
 
-        {/* 右侧状态区 */}
-        <div style={styles.right}>
-          {/* 连续登录 */}
-          <div style={styles.streak}>
-            🔥 <span>5</span>
+        <div className="header-actions">
+          <div className="streak-pill" title={streak?.today_completed ? "Today's learning is complete" : "Keep learning today to continue your streak"}>
+            <span aria-hidden="true">✦</span> {streak?.current_streak ?? 0} day streak
           </div>
-
-          {/* 用户菜单 */}
-          <div style={styles.user}>
-            <button
-              style={styles.userButton}
-              onClick={() => setOpen(!open)}
-            >
-              USER ▾
+          <div className="profile-menu">
+            <button className="profile-button" type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
+              <span className="profile-avatar" aria-hidden="true">{(user?.display_name || user?.email || "M").charAt(0).toUpperCase()}</span>
+              <span className="profile-name">{user?.display_name || user?.email}</span>
+              <span aria-hidden="true">⌄</span>
             </button>
-
             {open && (
-              <div style={styles.dropdown}>
-                <div style={styles.dropdownItem}>Profile</div>
-                <div style={styles.dropdownItem}>Settings</div>
-                <div style={styles.dropdownDivider} />
-                <div style={styles.dropdownItem}>Logout</div>
+              <div className="profile-dropdown">
+                <Link to="/profile" onClick={() => setOpen(false)}>Profile</Link>
+                <Link to="/settings" onClick={() => setOpen(false)}>Settings</Link>
+                <div className="dropdown-divider" />
+                <button type="button" onClick={() => void logout()}>Sign out</button>
               </div>
             )}
           </div>
         </div>
       </header>
 
-      {/* 页面主体 */}
-      <main style={styles.main}>
-        <Outlet />
-      </main>
-    </>
+      <main className="app-main"><Outlet /></main>
+    </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  header: {
-    height: 64,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "0 24px",
-    borderBottom: "1px solid #e5e7eb",
-    backgroundColor: "#ffffff",
-  },
-
-  left: {
-    display: "flex",
-    alignItems: "center",
-  },
-
-  logo: {
-    fontSize: 24,
-    textDecoration: "none",
-  },
-
-  nav: {
-    display: "flex",
-    gap: 32,
-    fontWeight: 600,
-    letterSpacing: "0.04em",
-  },
-
-  navItem: {
-    textDecoration: "none",
-    color: "#6b7280",
-    paddingBottom: 4,
-  },
-
-  navItemActive: {
-    textDecoration: "none",
-    color: "#111827",
-    borderBottom: "2px solid #111827",
-    paddingBottom: 4,
-  },
-
-  right: {
-    display: "flex",
-    alignItems: "center",
-    gap: 24,
-  },
-
-  streak: {
-    fontSize: 14,
-    color: "#374151",
-  },
-
-  user: {
-    position: "relative",
-  },
-
-  userButton: {
-    background: "none",
-    border: "1px solid #e5e7eb",
-    borderRadius: 6,
-    padding: "6px 10px",
-    cursor: "pointer",
-    fontSize: 14,
-  },
-
-  dropdown: {
-    position: "absolute",
-    top: "110%",
-    right: 0,
-    background: "#ffffff",
-    border: "1px solid #e5e7eb",
-    borderRadius: 8,
-    boxShadow: "0 10px 20px rgba(0,0,0,0.08)",
-    minWidth: 140,
-    zIndex: 100,
-  },
-
-  dropdownItem: {
-    padding: "10px 14px",
-    fontSize: 14,
-    cursor: "pointer",
-    color: "#111827",
-  },
-
-  dropdownDivider: {
-    height: 1,
-    background: "#e5e7eb",
-    margin: "4px 0",
-  },
-
-  main: {
-    padding: 24,
-    backgroundColor: "#fafafa",
-    minHeight: "calc(100vh - 64px)",
-  },
-};

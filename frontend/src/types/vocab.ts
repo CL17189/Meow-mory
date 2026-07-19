@@ -1,14 +1,15 @@
 export type VocabCard = {
-  id: number;
+  id: string;
   name: string;
   language: string;
   word_count: number;
+  preview?: string[];
   updated_at: string;
 };
 
 
 export type VocabFile = {
-  id: number;
+  id: string;
   name: string;
   word_count: number;
   preview: string[];
@@ -16,5 +17,7 @@ export type VocabFile = {
 };
 export type VocabListResponse = {
   items: VocabFile[];
+  limit?: number;
+  offset?: number;
   total: number;
 };

@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { importWords } from "../../api/words";
 import type { WordImportRequest } from "../../types/word";
+import { notifyStreakUpdated } from "../../api/stats";
 
 const WORDS_REGEX = /^[^,]+(,\s*[^,]+)*$/;
 
 export default function UploadWordsSection({
+  language = "en",
   onSuccess,
 }: {
+  language?: string;
   onSuccess: (count: number) => void;
 }) {
   const [input, setInput] = useState("");
@@ -24,15 +27,11 @@ export default function UploadWordsSection({
       return;
     }
 
-    if (!WORDS_REGEX.test(text)) {
-      setError("Use comma-separated English words.");
-      return;
-    }
-
-    const words = text.split(",").map((w) => w.trim());
+    const words = text.split(/[\s,;\n]+/).map((w) => w.trim()).filter(Boolean);
 
     const payload: WordImportRequest = {
       words,
+      language,
     };
 
     setLoading(true);
@@ -42,7 +41,8 @@ export default function UploadWordsSection({
     try {
       const res = await importWords(payload);
 
-      const count = res.count ?? words.length;
+      const count = res.inserted;
+      notifyStreakUpdated();
 
       onSuccess(count);
 
@@ -67,7 +67,7 @@ export default function UploadWordsSection({
       <h2 className="wp-upload-title">Add Vocabulary</h2>
 
       <p className="wp-upload-desc">
-        Enter words separated by commas.
+        Add words for your selected language. Separate them with commas, spaces, or new lines.
       </p>
 
       <form onSubmit={handleSubmit} className="wp-upload-form">
